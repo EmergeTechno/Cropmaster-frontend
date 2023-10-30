@@ -1,70 +1,45 @@
 <template>
   <div class="background">
-    <div class="crop-registration">
-      <div class="left-section">
-        <img :src="selectedPlantImage" alt="Imagen del cultivo" style="width: 500px; height: 500px;" />
+    <div class="tomato-details">
+      <div class="title">
+        <h1 class="title-text">Tomato Details</h1>
       </div>
-      <div class="right-section">
-        <h2><b>Register a Crop</b></h2>
-        <div class="form-row">
-          <label for="plant">Plant:  </label>
-          <pv-dropdown v-model="selectedPlant" :options="plants" option-label="label" option-value="value" @change="updateSelectedPlantImage" placeholder="Select a plant"></pv-dropdown>
-
-        </div>
-        <div class="form-row">
-          <label style="color: white;">Land type:  </label>
-          <pv-input
-              v-model="landType"
-              style="border: 1px solid #4CAF50; background-color: transparent; color: white;"/>
-        </div>
-        <div class="form-row">
-          <label style="color: white;">Space between plants:  </label>
-          <pv-input
-              v-model="spacePlants"
-              style="border: 1px solid #4CAF50; background-color: transparent; color: white;"/>
-        </div>
-        <div class="center-button"><pv-button @click="submitForm" style="background-color: #1c1c1c; color: white;">Registrar Cultivo</pv-button></div>
-
-
+      <div class="detail">
+        <p class="detail-text">Scientific name: {{ scientificName }}</p>
+      </div>
+      <div class="detail">
+        <p class="detail-text">Variety: {{ variety }}</p>
+      </div>
+      <div class="image-container">
+        <img src="https://sembralia.com/cdn/shop/articles/tomate.jpg?v=1648560931" alt="Tomato Image" class="centered-image">
+      </div>
+      <div class="detail-row">
+        <p class="detail-text">Land type: {{ cropLandType }}</p>
+      </div>
+      <div class="divider"></div>
+      <div class="detail-row">
+        <p class="detail-text">Distance between plants: {{ distanceCrop }}</p>
+      </div>
+      <div class="divider"></div>
+      <div class="detail-row">
+        <p class="detail-text">Weather conditions: {{ cropWeather }}</p>
       </div>
     </div>
   </div>
 </template>
-
 <script>
 export default {
   data() {
     return {
-      selectedPlant: null,
-      landType:'',
-      spacePlants:'',
-      plants: [
-        { label: 'TOMATE', value: 'plant1', imageUrl: 'https://s1.eestatic.com/2021/07/12/actualidad/595952167_195030066_1706x960.jpg' },
-        { label: 'PEPINO', value: 'plant2', imageUrl: 'https://www.finedininglovers.com/es/sites/g/files/xknfdk1706/files/styles/article_1200_800_fallback/public/2022-06/Type%20of%20cucumber.jpg?itok=WEuXomjV' },
-        { label: 'CEBOLLA', value: 'plant3', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJgyeKFSDUEuff1j_znrU6KQfal0dutg4sYkqlS009n_HH4ey9RkblwMvhjX17TFd4FL8&usqp=CAU' }
-        // Agrega más plantas con sus respectivas imágenes y valores
-      ]
+      scientificName: "asdasdasd",
+      variety: "sadasd",
+      cropLandType: "Crop Land Type",
+      distanceCrop: "Distance Crop",
+      cropWeather: "Crop Weather"
     };
-  },
-  computed: {
-    selectedPlantImage() {
-      // Busca la URL de la imagen de la planta seleccionada
-      const selectedPlantData = this.plants.find(plant => plant.value === this.selectedPlant);
-      return selectedPlantData ? selectedPlantData.imageUrl : '';
-    }
-  },
-  methods: {
-    submitForm() {
-      // Aquí puedes enviar los datos del cultivo al servidor o realizar otras acciones.
-      // Por ahora, solo mostraremos la planta seleccionada en la consola.
-      console.log('Planta seleccionada:', this.selectedPlant);
-
-      // Puedes agregar la lógica para enviar estos datos al servidor aquí.
-    }
   }
 };
 </script>
-
 <style scoped>
 .background {
   background-color: #242424;
@@ -72,36 +47,57 @@ export default {
   margin: 15px 20px 15px 20px; /* Agregar el relleno deseado */
   border-radius: 15px; /* Agregar bordes redondeados */
   width: 100%;
-  padding-bottom: 3rem;
 }
-.crop-registration {
-  padding-top: 10px;
+.tomato-details {
+
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Alinea los elementos a la izquierda */
+  text-align: left; /* Alinea el texto a la izquierda */
+
+}
+.title {
+  margin-right: 20px; /* Espacio entre el título y el borde derecho */
+}
+
+.title-text {
+  font-weight: bold;
+}
+
+.detail {
+  margin-right: 20px; /* Espacio entre los detalles y el borde derecho */
+  margin-top: 15px;
+}
+
+.detail-text {
+  font-weight: bold;
+}
+.image-container {
+  text-align: center; /* Centrar la imagen horizontalmente */
+  margin-top: 15px;
+}
+
+.centered-image {
+  max-width: 100%; /* Asegura que la imagen no sea más ancha que su contenedor */
+  max-height: 300px; /* Límite de altura máximo */
+  height: auto; /* Mantiene la proporción de aspecto de la imagen */
+}
+.detail-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
+  margin-top: 15px;
+
 }
 
-.left-section {
-  flex: 1;
-  display: flex;
-  justify-content: center; /* Centrar horizontalmente */
-  align-items: center; /* Centrar verticalmente */
+.divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.5); /* Color de línea divisoria */
+  margin: 10px 0;
+  margin-top: 15px;
 }
-
-.right-section {
-  flex: 1;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column; /* Alinear los elementos verticalmente */
-  gap: 10px; /* Agregar espacio vertical entre los elementos */
-}
-
-.form-row {
-  margin-bottom: 10px;
-}
-.center-button {
-  display: flex;
-  justify-content: start /* Centrar el botón horizontalmente */
-}
-/* Estilos CSS para tu formulario aquí */
 </style>
