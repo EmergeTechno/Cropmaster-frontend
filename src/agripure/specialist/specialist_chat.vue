@@ -43,6 +43,77 @@ import {ChatServices} from "@/services/chat-service";
 
 export default {
     name: "specialist_chat",
+    data(){
+        return{
+            token: sessionStorage.getItem("jwt"),
+            value : ref(""),
+            items : ref([]),
+            displayableContacts:[],
+            currentContacts:[]
+
+        }
+    },
+    created() {
+        new ContactServices().getContactsForSpecialist(2).then(response=>{
+            this.getDisplayableContacts(response.data)
+        })
+    },
+    methods:{
+        reset(){
+            this.currentContacts=this.displayableContacts
+            this.value=""
+        },
+        select() {
+            for (let i = 0; i < this.currentContacts.length; i++) {
+                if(this.currentContacts[i].name===this.value){
+                    let temp=this.currentContacts[i]
+                    this.currentContacts=[]
+                    this.currentContacts.push(temp)
+                }
+            }
+        },
+        search(event){
+            // Filtra los objetos cuyo atributo "name" coincide con searchInventorValue
+            const matchingContacts = this.displayableContacts.filter(contact =>
+                contact.name.toLowerCase().includes(this.value.toString().toLowerCase())
+            );
+            if(matchingContacts.length===0){
+                this.currentContacts=[]
+            }else {
+                this.items = matchingContacts.map(contact => contact.name);
+                this.currentContacts=matchingContacts
+            }
+        },
+        irAChat(id) {
+            this.$router.push("/specialist/chat/" + id)
+        },
+        getLastMessageFromChat(contactId,displayableContactIndex){
+            new ChatServices().getChatByContactId(contactId).then(response=>{
+                let aux=[]
+                aux=response.data
+                if(response.data){
+                    this.displayableContacts[displayableContactIndex].message= response.data[aux.length-1].message
+                    this.displayableContacts[displayableContactIndex].hour= response.data[aux.length-1].hour
+                    this.currentContacts=this.displayableContacts
+                }
+            })
+        },
+        getDisplayableContacts(rawContacts){
+            for (let i = 0; i < rawContacts.length; i++) {
+                new UserServices().getUserById(rawContacts[i].farmerId).then(response=>{
+                    let displayableContact=response.data
+                    displayableContact.contactId=rawContacts[i].id
+                    this.displayableContacts.push(displayableContact)
+                    this.displayableContacts[this.displayableContacts.length-1].message="Envia un mensaje !"
+                    this.displayableContacts[this.displayableContacts.length-1].hour=" "
+                    if(rawContacts[i].isChatStarted===true){
+                        this.getLastMessageFromChat(rawContacts[i].id,this.displayableContacts.length-1)
+                    }
+                })
+                this.currentContacts=this.displayableContacts
+            }
+        }
+    }
 }
 </script>
 
