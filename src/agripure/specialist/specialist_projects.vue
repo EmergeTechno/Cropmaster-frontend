@@ -57,6 +57,37 @@
                     </pv-column >
                 </pv-dataTable>
             </div>
+            <pv-dialog v-model:visible="activitiesDialogVisible" maximizable modal header="Activities" :style="{ width: '80vw' }">
+                <div class="addplantbackground">
+                    <div class="crop-details">
+                        <div v-for="activities in currentActivities"
+                             :key="activities.id">
+                            <pv-accordion>
+                                <pv-accordionTab>
+                                    <template #header>
+                                        <div style="width: 100%;display: flex;justify-content: space-between">
+                                            <span>{{ activities.title }}</span>
+                                            <pv-tag v-if="activities.completed" severity="success" >Finished</pv-tag>
+                                            <pv-tag v-if="!activities.completed" severity="danger" >Pending</pv-tag>
+                                        </div>
+                                    </template>
+                                    <div class="chat-card">
+                                        <div class="chat-content" >
+                                            <div class="chat-header">
+                                                <h3 style="margin-bottom: 0.5rem">{{ activities.description }}</h3>
+                                            </div>
+                                            <div style="display: flex;">
+                                                <i class="pi pi-calendar" style="margin-right: 1rem"></i>
+                                                <p style="width: 50%">{{ activities.date }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </pv-accordionTab>
+                            </pv-accordion>
+                        </div>
+                    </div>
+                </div>
+            </pv-dialog>
         </div>
     </div>
 </template>
