@@ -102,6 +102,111 @@
                     </div>
                 </div>
             </pv-dialog>
+            <pv-dialog v-model:visible="createProjectVisible" maximizable modal header="Create a project" :style="{ width: '800px' }">
+                <div class="addplantbackground">
+                    <div v-if="selectionStep">
+                        <div v-if="!stepContactSelected">
+                            <div style="display:flex; justify-content: center">
+                                <h2 style="margin-bottom: 2rem">SELECT A CONTACT</h2>
+                            </div>
+                            <div style="display:flex; justify-content: center">
+                                <pv-dropdown style="width: 90%" v-model="selectedContact" editable :options="currentContactForSpecialist"
+                                             optionLabel="name" placeholder="Select a contact" @change="getCropForProject()"/>
+                            </div>
+                        </div>
+                        <div v-if="stepContactSelected">
+                            <div style="display:flex; justify-content: center">
+                                <h2 style="margin: 0 2rem 2rem 0">SELECT A CROP</h2>
+                            </div>
+                            <div style="display:flex; justify-content: center">
+                                <pv-dropdown style="width: 90%" :disabled="selectedContact===null" v-model="selectedCrop" @change="this.isNextButtonDisable=false" editable :options="currentCropsForFarmer"
+                                             optionLabel="name" placeholder="Select a crop" />
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="informationStep">
+                        <div style="display:flex; justify-content: center">
+                            <h2 style="margin: 0rem 2rem 2rem 0">INFORMATION</h2>
+                        </div>
+                        <div style="display:flex; justify-content: center; width: 100%;">
+                        <span style="margin: 1.5rem 2rem 0rem 2rem;width: 100%;display:flex; justify-content: center;" class="p-float-label">
+                          <pv-input @input="validateNextButtonDisable" v-model="projectName" style="width: 100%"/>
+                          <label style="width: 100%">Project name</label>
+                        </span>
+                        </div>
+                        <div style="display:flex; justify-content: center; width: 100%;">
+                        <span style="margin: 1.8rem 2rem 2rem 2rem;width: 100%;display:flex; justify-content: center;" class="p-float-label">
+                          <pv-textArea style="width: 100%" @input="validateNextButtonDisable" rows="3" cols="15" v-model="projectDescription"/>
+                          <label style="width: 100%">Project description</label>
+                        </span>
+                        </div>
+
+
+
+                    </div>
+                    <div v-if="dateStep">
+                        <h2 style="margin: 0 2rem 1rem 0">Project duration</h2>
+                        <div style="display: flex; justify-content: center; width: 100%;">
+                            <div style="width: 90%;">
+                                <p style="margin: 1rem 0 0.5rem 0">Start date</p>
+                                <pv-calendar @dateSelect="validateNextButtonDisable" v-model="startProjectDate" date-format="dd/mm/yy" style="width: 100%" showIcon :minDate="startProjectMinDate" :manualInput="false" />
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: center; width: 100%;">
+                            <div style="width: 90%;">
+                                <p style="margin: 1.5rem 0 0.5rem 0">Finish date</p>
+                                <pv-calendar @dateSelect="validateNextButtonDisable" v-model="finishProjectDate" date-format="dd/mm/yy" style=" width: 100%;margin-bottom: 1rem" showIcon :minDate="startProjectDate" :manualInput="false" />
+                            </div>
+                        </div>
+                    </div>
+                    <div v-if="taskStep">
+                        <h2 style="margin: 0 2rem 2rem 0">Add tasks</h2>
+                        <div style="display: flex;justify-content: space-around">
+                            <div style="width: 35%">
+                                <div style="display:flex; justify-content: center; width: 100%;">
+                                <span style="margin: 0 1rem 0 0;width: 100%;display:flex; justify-content: center;" class="p-float-label">
+                                  <pv-input @input="validateAddTaskButtonDisable" style="width: 100%" v-model="taskName" />
+                                  <label style="width: 100%">Task name</label>
+                               </span>
+                                </div>
+                                <div style="display:flex; justify-content: center; width: 100%;">
+                                <span style="margin: 1.5rem 1rem 0 0;width: 100%;display:flex; justify-content: center;" class="p-float-label">
+                                  <pv-textArea @input="validateAddTaskButtonDisable" style="width: 100%" rows="2" cols="15" v-model="taskDescription" />
+                                  <label style="width: 100%">Task description</label>
+                                </span>
+                                </div>
+                                <div style="display: flex;justify-content: center; width: 93%">
+                                    <pv-button :disabled="isAddTaskButtonDisable" style="margin-top: 1rem; width: 100%"  label="Add" severity="success" @click="addTask()"/>
+                                </div>
+                                <div class="task-grid" style="height: 100%">
+                                    <div class="task-icon" v-for="task in taskForProject">
+                                        <div>
+                                            <div class="overlay"></div> <!-- Agrega la capa overlay aquí -->
+                                            <div class="content" @click="deleteTask(task.id)">
+                                                <div class="calendar-day">{{ formatCardDate(task.date) }}</div>
+                                                <div class="task-name">{{ task.name }}</div>
+                                                <div class="delete-text" style="font-weight: bold">Delete</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div style="width: 65%">
+                                <div class="card flex justify-content-center">
+                                    <pv-calendar @dateSelect="validateAddTaskButtonDisable" v-model="activityProjectDate" :minDate="startProjectDate" :maxDate="finishProjectDate" inline showWeek />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="display: flex;justify-content: space-between; margin: 2rem 1rem 0 1rem">
+                        <pv-button v-if="!stepContactSelected" label="Cancel" severity="danger" @click="addProjectStepPrevious()"  />
+                        <pv-button v-if="stepContactSelected" label="Previous" severity="secondary" @click="addProjectStepPrevious()"  />
+                        <pv-button v-if="!taskStep" :disabled="isNextButtonDisable" label="Next" severity="success" @click="addProjectStepNext()"/>
+                        <pv-button v-if="taskStep" :disabled="isCreateProjectButtonDisable" label="Create" severity="success" @click="sendCreatedProject()"/>
+                    </div>
+                </div>
+            </pv-dialog>
         </div>
     </div>
 </template>
