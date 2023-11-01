@@ -88,6 +88,20 @@
                     </div>
                 </div>
             </pv-dialog>
+            <pv-dialog v-model:visible="projectDetailsDialogVisible" maximizable modal header="Details" :style="{ width: '80vw' }">
+                <div class="addplantbackground">
+                    <div class="crop-details">
+                        <h1>{{currentProjectDetail.name}}</h1>
+                        <h4>{{currentProjectDetail.description}}</h4>
+                        <h5>Farmer: {{currentProjectDetail.farmerName}}</h5>
+                        <h5>Status: {{getStatusProject(currentProjectDetail.isProjectStarted)}}</h5>
+                        <h5>Crop: {{currentCropForProject.name}}</h5>
+                        <h5>Duration: {{currentProjectDetail.durationDays}} days</h5>
+                        <h5>Activities: {{ currentProjectDetail.activitiesDone }} of {{ currentProjectDetail.totalActivities }} done</h5>
+
+                    </div>
+                </div>
+            </pv-dialog>
         </div>
     </div>
 </template>
