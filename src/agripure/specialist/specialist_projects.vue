@@ -1,0 +1,459 @@
+<template>
+    <div class="background">
+        <div class="header" style="display: flex;justify-content: left;">
+            <h1>Manage your projects</h1>
+        </div>
+        <div class="projects">
+            <div class="card">
+                <pv-dataTable ref="dt"
+                              :value="projects"
+                              v-model:filters="filters"
+                              datakey="id"
+                              :paginator="true"
+                              :rows="10"
+                              :filters="filters"
+                              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
+                              :rowsPerPageOptions="[1, 2, 3]"
+                              currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} habitaciones"
+                              responsiveLayout="scroll"
+                              :globalFilterFields="['name', 'isProjectStarted', 'weeks', 'description']"
+                              tableStyle="min-width: 50rem">
+                    <template #header>
+                        <div class="flex" style="display:flex;justify-content: space-between;width: 100%;">
+                            <span class="p-input-icon-left">
+                              <pv-button label="Create project" severity="success" @click="createProject()"  />
+                            </span>
+                            <span class="p-input-icon-left">
+                              <i class="pi pi-search" />
+                              <pv-input v-model="filters['global'].value" placeholder="Keyword Search" />
+                            </span>
+                        </div>
+                    </template>
+                    <template #empty> No projects found. </template>
+                    <template #loading> Loading projects data. Please wait. </template>
+                    <pv-column field="name" header="Name" style="min-width: 7rem"></pv-column>
+                    <pv-column field="farmerName" header="Farmer" style="min-width: 7rem">
+                    </pv-column>
+                    <pv-column field="durationDays" header="Duration" style="min-width: 7rem">
+                        <template #body="{ data }">
+                            <p>{{data.durationDays}} days</p>
+                        </template>
+                    </pv-column>
+                    <pv-column field="totalActivities" header="Activities" style="min-width: 7rem">
+                        <template #body="{ data }">
+                            <pv-button severity="secondary" rounded size="small" @click="openActivities(data.id)">{{ data.activitiesDone }}/{{ data.totalActivities }}</pv-button>
+                        </template>
+                    </pv-column>
+                    <pv-column field="isProjectStarted" header="Status" style="min-width: 1rem">
+                        <template #body="{ data }">
+                            <pv-tag :value="getStatusProject(data.isProjectStarted)" :severity="getSeverity(data.isProjectStarted)" />
+                        </template>
+                    </pv-column >
+                    <pv-column  header="" style="min-width: 1rem">
+                        <template #body="{ data }">
+                            <pv-button v-if="data.isProjectStarted" label="Details" severity="success" @click="showProjectDetail(data)"  />
+                            <pv-button v-if="!data.isProjectStarted" label="Start" severity="success"   />
+                        </template>
+                    </pv-column >
+                </pv-dataTable>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import { FilterMatchMode } from 'primevue/api';
+import {ProjectService} from "@/services/project-service";
+import {ActivitiesService} from "@/services/activities-service";
+import {SpecialistServices} from "@/services/specialists-service";
+import {PlantServices} from "@/services/plant-service";
+import {CropServices} from "@/services/crop-service";
+import {UserServices} from "@/services/user-service";
+import {ContactServices} from "@/services/contacts-service";
+
+export default {
+    name: "farmer_projects",
+    data(){
+        return{
+            selectionStep:true,
+            informationStep:false,
+            dateStep:false,
+            taskStep:false,
+            stepContactSelected:false,
+            startProjectDate: null,
+            startProjectMinDate: new Date(),
+            finishProjectDate: null,
+            activityProjectDate: null,
+            projects:[],
+            filters: {
+                global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+                name: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                description: { value: null, matchMode: FilterMatchMode.STARTS_WITH },
+                weeks: { value: null, matchMode: FilterMatchMode.IN },
+                isProjectStarted: { value: null, matchMode: FilterMatchMode.EQUALS },
+                verified: { value: null, matchMode: FilterMatchMode.EQUALS }
+            },
+            activitiesDialogVisible:false,
+            projectDetailsDialogVisible:false,
+            createProjectVisible:false,
+            currentActivities:[],
+            currentProjectDetail:{},
+            currentSpecialistForProject:{},
+            currentCropForProject:{},
+            currentContactForSpecialist:[],
+            currentCropsForFarmer:[],
+            selectedContact: null,
+            selectedCrop: null,
+            projectName:"",
+            projectDescription:"",
+            taskName:"",
+            taskDescription:"",
+            taskForProject:[],
+            isNextButtonDisable:true,
+            isAddTaskButtonDisable:true,
+            isCreateProjectButtonDisable:true
+        };
+    },
+    created(){
+        this.startProjectMinDate = new Date();
+        new ProjectService().getProjectsBySpecialistId(sessionStorage.getItem("id")).then(response=>{
+            this.projects=response.data
+            console.log(this.projects)
+            this.setFarmerDataToProject()
+            this.setDurationDayToProject()
+            this.setActivitysForProject()
+        })
+    },
+    methods:{
+        setActivitysForProject(){
+            for (let i = 0; i < this.projects.length; i++) {
+                new ActivitiesService().getActivitiesByProjectId(this.projects[i].id).then(response=>{
+                    let activities=response.data
+                    let activitiesDone=0
+                    for (let i = 0; i < activities.length; i++) {
+                        if(activities[i].completed===true){
+                            activitiesDone+=1
+                        }
+                    }
+                    this.projects[i].totalActivities=activities.length
+                    this.projects[i].activitiesDone=activitiesDone
+                })
+            }
+
+        },
+        setDurationDayToProject(){
+            for (let i = 0; i < this.projects.length; i++) {
+                this.projects[i].durationDays=this.calculateDurationDay(this.projects[i].startDate,this.projects[i].endDate)
+            }
+        },
+        calculateDurationDay(start, end) {
+            const [startDay, startMonth, startYear] = start.split('/');
+            const [endDay, endMonth, endYear] = end.split('/');
+
+            const startDate = new Date(startYear, startMonth - 1, startDay);
+            const endDate = new Date(endYear, endMonth - 1, endDay);
+
+            const timeDifference = endDate - startDate;
+            const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            return daysDifference;
+        },
+        validateNextButtonDisable(){
+            if(this.selectionStep){
+                if(this.selectedCrop!==null){
+                    this.isNextButtonDisable=false
+                }
+                if(this.projectName !== "" && this.projectDescription !== ""){
+                    this.isNextButtonDisable=false
+                }
+            }
+            if(this.informationStep){
+                if(this.startProjectDate !== null && this.finishProjectDate !== null){
+                    this.isNextButtonDisable=false
+                }
+                if(this.projectName !== "" && this.projectDescription !== ""){
+                    this.isNextButtonDisable=false
+                }
+            }
+            if(this.dateStep){
+
+                if(this.startProjectDate !== null && this.finishProjectDate !== null){
+                    this.isNextButtonDisable=false
+                }
+            }
+            if(this.taskForProject.length!==0){
+                this.isCreateProjectButtonDisable=false
+            }
+
+        },
+        validateAddTaskButtonDisable(){
+            if(this.taskName !== "" && this.taskDescription !== "" && this.activityProjectDate!==null){
+                this.isAddTaskButtonDisable=false
+            }
+        },
+        sendCreatedProject(){
+            let newProject={}
+            newProject.id=this.projects.length+1//solucion temporal
+            newProject.name=this.projectName
+            newProject.description=this.projectDescription
+            newProject.farmerId=this.selectedContact.id
+            newProject.farmerName=this.selectedContact.name
+            newProject.farmerImageUrl=this.selectedContact.imageUrl
+            newProject.cropId=this.selectedCrop.id
+            newProject.startDate=this.formatPeruvianDate(this.startProjectDate)
+            newProject.endDate=this.formatPeruvianDate(this.finishProjectDate)
+            newProject.specialistId=parseInt(sessionStorage.getItem("id").toString())
+            newProject.durationDays=this.calculateDurationDay(this.formatPeruvianDate(this.startProjectDate),this.formatPeruvianDate(this.finishProjectDate))
+            newProject.totalActivities=this.taskForProject.length
+            newProject.activitiesDone=0
+            newProject.isProjectStarted=this.isProjectStarted()
+            //add project by service
+
+            console.log(newProject)
+            this.projects.push(newProject)
+
+            //add task as activities
+            this.createStorableTaskForProject(newProject)
+
+            this.createProjectVisible=false
+            this.taskStep=false
+            this.selectionStep=true
+            this.cleanProjectData()
+        },
+        createStorableTaskForProject(project){
+            let storableTasks=[]
+            for (let i = 0; i < this.taskForProject.length; i++) {
+                let tempStorableTask={}
+                tempStorableTask.id=i+1
+                tempStorableTask.projectId=this.projects.length//project.id
+                tempStorableTask.title=this.taskForProject[i].name
+                tempStorableTask.description=this.taskForProject[i].description
+                tempStorableTask.date=this.formatPeruvianDate(this.taskForProject[i].date)
+                tempStorableTask.completed=false
+                storableTasks.push(tempStorableTask)
+            }
+            console.log(storableTasks)
+            this.uploadTaskAsActivities(storableTasks)
+        },
+        uploadTaskAsActivities(storableTasks){
+            // use activities service for
+        },
+        isProjectStarted() {
+            // Obtiene la fecha actual
+            const currentDate = new Date();
+
+            // Compara currentDate con startProjectDate
+            if (currentDate >= this.startProjectDate) {
+                // La fecha actual es igual o posterior a startProjectDate
+                return true;
+            } else {
+                // La fecha actual es anterior a startProjectDate
+                return false;
+            }
+        },
+        addProjectStepNext(){
+            this.isNextButtonDisable=true
+            if(this.dateStep){
+                this.dateStep = false
+                this.taskStep=true
+            }
+            if(this.informationStep){
+                this.informationStep = false
+                this.dateStep = true
+            }
+            if(this.selectionStep){
+                if(this.selectedContact)
+                if(this.stepContactSelected){
+                    if(this.projectName !== ""&&this.projectDescription!== ""){
+                        this.isNextButtonDisable=false
+                    }
+                    this.selectionStep=false
+                    this.informationStep=true
+                }else{
+                    if(this.selectedContact!==null){
+                        this.isNextButtonDisable=false
+                    }
+                    this.stepContactSelected=true
+
+                }
+            }
+        },
+        addProjectStepPrevious(){
+            if(this.selectionStep){
+                if(this.stepContactSelected===false){
+                    this.createProjectVisible=false
+                    this.cleanProjectData
+                }
+                else{
+                    if(this.selectedContact!==null){
+                        this.isNextButtonDisable=false
+                    }
+                    this.stepContactSelected=false
+                }
+            }
+            if(this.informationStep){
+                if(this.selectedCrop!==null){
+                    this.isNextButtonDisable=false
+                }
+                this.informationStep=false
+                this.selectionStep=true
+            }
+            if(this.dateStep){
+                if(this.projectName !== "" && this.projectDescription !== ""){
+                    this.isNextButtonDisable=false
+                }
+                this.informationStep=true
+                this.dateStep=false
+            }
+            if(this.taskStep){
+                if(this.startProjectDate !== null && this.finishProjectDate !== null){
+                    this.isNextButtonDisable=false
+                }
+                this.dateStep=true
+                this.taskStep=false
+            }
+        },
+        formatCardDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${day}`;
+        },
+        formatPeruvianDate(date) {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        },
+        addTask(){
+            let newTask= {}
+            newTask.id=this.taskForProject.length+1
+            newTask.name=this.taskName
+            newTask.description=this.taskDescription
+            newTask.date=this.activityProjectDate
+            if(this.isTaskUnique(newTask)){
+                this.taskForProject.push(newTask)
+            }else {
+                console.log("tarea repetida")
+                this.$toast.add({severity:'error', summary: 'Repeated task ', detail:'You have entered a repeated task on the same day', life: 3000});
+            }
+            this.taskName=""
+            this.taskDescription=""
+            this.activityProjectDate=null
+            this.isAddTaskButtonDisable=true
+            this.isCreateProjectButtonDisable=false
+        },
+        isTaskUnique(task) {
+          // Verifica si existe algún elemento en el arreglo con el mismo name y date
+            return !this.taskForProject.some(existingTask => {
+              return (
+                existingTask.name === task.name &&
+                existingTask.date.getTime() === task.date.getTime()
+              );
+            });
+          },
+        deleteTask(id) {
+            if(this.taskForProject.length===1){
+                this.isCreateProjectButtonDisable=true
+            }
+            // Filtrar el arreglo para excluir el elemento con el ID proporcionado
+            this.taskForProject = this.taskForProject.filter(task => task.id !== id);
+        },
+        getCropForProject(){
+            this.currentCropsForFarmer=[]
+            this.isNextButtonDisable=false
+            new CropServices().getCropsByFarmerId(this.selectedContact.id).then(response=>{
+                let cropsForFarmer=response.data
+                for (let i = 0; i < cropsForFarmer.length; i++) {
+                    new PlantServices().getPlantInfoById(cropsForFarmer[i].plantId).then(res=>{
+                        this.currentCropsForFarmer.push(res.data)
+                    })
+                }
+            })
+        },
+        cleanProjectData(){
+            this.selectedContact=null
+            this.selectedCrop=null
+            this.projectName=""
+            this.projectDescription=""
+            this.startProjectDate=null
+            this.finishProjectDate=null
+            this.activityProjectDate=null
+            this.taskName=""
+            this.taskDescription=""
+            this.taskForProject=[]
+        },
+        createProject(){
+            this.cleanProjectData()
+            this.isAddTaskButtonDisable=true
+            this.isCreateProjectButtonDisable=true
+            this.isNextButtonDisable=true
+            this.informationStep=false
+            this.dateStep=false
+            this.taskStep=false
+            this.selectionStep=true
+            this.stepContactSelected=false
+            this.currentContactForSpecialist=[]
+            new ContactServices().getContactsForSpecialist(sessionStorage.getItem("id")).then(response=>{
+                let rawContact=response.data
+                for (let i = 0; i < rawContact.length; i++) {
+                    new UserServices().getUserById(rawContact[i].farmerId).then(response=>{
+                        this.currentContactForSpecialist.push(response.data)
+                    })
+                }
+                this.createProjectVisible=!this.createProjectVisible
+            })
+
+        },
+        getSeverity(status) {
+            switch (status) {
+                case true:
+                    return 'success';
+
+                case false:
+                    return 'danger';
+            }
+        },
+        setFarmerDataToProject(){
+            for (let i = 0; i < this.projects.length; i++) {
+                new UserServices().getUserById(this.projects[i].farmerId).then(response=>{
+                    this.projects[i].farmerName=response.data.name
+                    this.projects[i].farmerImageUrl=response.data.imageUrl
+                })
+            }
+
+        },
+        showProjectDetail(project){
+            this.getSpecialistInfo(project.specialistId)
+            this.getCropInfo(project.cropId)
+            this.currentProjectDetail=project
+            this.projectDetailsDialogVisible=!this.projectDetailsDialogVisible
+        },
+        getStatusProject(status){
+            switch (status) {
+                case true:
+                    return 'Started';
+
+                case false:
+                    return 'Pending';
+            }
+        },
+        openActivities(id){
+            this.activitiesDialogVisible=!this.activitiesDialogVisible
+            new ActivitiesService().getActivitiesByProjectId(id).then(response=>{
+                this.currentActivities=response.data
+            })
+        },
+        getSpecialistInfo(id){
+            new UserServices().getUserById(id).then(res=>{
+                this.currentSpecialistForProject=res.data
+            })
+        },
+        getCropInfo(cropId){
+            new CropServices().getCropInfoById(cropId).then(response=>{
+                new PlantServices().getPlantInfoById(response.data.plantId).then(resp=>{
+                    this.currentCropForProject=resp.data
+                })
+            })
+        }
+    },
+}
+</script>
+
