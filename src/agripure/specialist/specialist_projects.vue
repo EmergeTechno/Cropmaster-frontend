@@ -607,3 +607,152 @@ export default {
 }
 </script>
 
+<style scoped>
+.task-grid {
+    margin-top: 1rem;
+    margin-right: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); /* Ajusta el ancho de las columnas según tus necesidades */
+    gap: 10px; /* Espacio entre las tarjetas */
+    max-height: 200px; /* Establece la altura máxima según tus necesidades */
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
+}
+.task-icon {
+    max-height: 70px;
+    position: relative;
+    border-radius: 5px;
+    background-color: black;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.task-icon:hover {
+    transform: scale(1.05); /* Agranda la tarjeta al pasar el mouse */
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1; /* Asegura que el contenido esté sobre la capa negra */
+}
+
+.calendar-day {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.task-name {
+    font-size: 10px;
+    margin-top: 5px;
+}
+
+.delete-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* Asegura que el texto esté sobre la capa negra */
+    font-size: 12px;
+    opacity: 0;
+}
+
+.task-icon:hover .delete-text {
+    cursor: pointer;
+    opacity: 1; /* Muestra el texto "Eliminar" al pasar el mouse */
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Color negro con opacidad */
+    border-radius: 5px;
+    z-index: 0; /* Asegura que esté detrás del contenido */
+    opacity: 0; /* Inicialmente transparente */
+    transition: opacity 0.3s;
+}
+
+.task-icon:hover .overlay {
+    opacity: 1; /* Muestra la capa negra al pasar el mouse */
+}
+
+
+
+/* Ajusta los estilos según tus preferencias */
+
+
+.background {
+    background-color: #242424;
+    color: white; /* Cambiar el color del texto si es necesario */
+    margin: 15px 20px 15px 20px; /* Agregar el relleno deseado */
+    border-radius: 15px; /* Agregar bordes redondeados */
+    width: 100%;
+    padding-bottom: 3rem;
+}
+.header {
+    margin: 3rem 3rem 1rem 3rem;
+    display: flex;
+    align-items: center; /* Centra verticalmente los elementos */
+}
+.projects{
+    padding: 1.5rem;
+}
+
+.chat-card {
+    display: flex;
+    align-items: center;
+    background-color: #1c1c1c; /* Color de fondo negro */
+    color: white; /* Color de texto blanco */
+    border-radius: 10px; /* Bordes redondos */
+    margin-bottom: 10px; /* Espaciado entre tarjetas */
+}
+
+.profile-image {
+    width: 50px; /* Ancho de la imagen de perfil */
+    height: 50px; /* Alto de la imagen de perfil */
+    border-radius: 50%; /* Hace que la imagen sea redonda */
+    overflow: hidden; /* Oculta cualquier parte de la imagen fuera del círculo */
+    margin-right: 10px;
+}
+
+.profile-image img {
+    width: 100%; /* Ajusta la imagen de perfil al círculo */
+    height: 100%;
+    object-fit: cover; /* Mantiene la relación de aspecto de la imagen */
+}
+
+.chat-content {
+    flex-grow: 1;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chat-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.chat-header span {
+    font-size: 0.9rem;
+    color: #888;
+}
+
+p {
+    margin: 0;
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style>
