@@ -29,7 +29,6 @@
       </div>
     </div>
   </div>
-
   </template>
   
   <script>
@@ -45,11 +44,9 @@
         { label: 'CEBOLLA', value: 'plant3', imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJgyeKFSDUEuff1j_znrU6KQfal0dutg4sYkqlS009n_HH4ey9RkblwMvhjX17TFd4FL8&usqp=CAU' }
         // Agrega más plantas con sus respectivas imágenes y valores
       ]
-
       };
     },
     computed: {
-
     selectedPlantImage() {
       // Busca la URL de la imagen de la planta seleccionada
       const selectedPlantData = this.plants.find(plant => plant.value === this.selectedPlant);

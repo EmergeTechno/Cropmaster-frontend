@@ -7,8 +7,5 @@ export class ContactServices{
     getContactsForFarmer(id){
         return http.get("?farmerId="+id);
     }
-    getContactById(id){
-        return http.get(""+id);
-    }
 
 }

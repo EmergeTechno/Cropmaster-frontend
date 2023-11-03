@@ -6,7 +6,6 @@
         <div class="search-container">
           <div class="searchBar-container">
             <pv-autoComplete
-
               v-model="value"
               :suggestions="items"
               @complete="search"
