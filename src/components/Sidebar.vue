@@ -57,8 +57,6 @@ const ToggleMenu = () => {
 </script>
 
 
-
-
 <style lang="scss" scoped>
 aside {
     display: flex;
@@ -704,6 +702,5 @@ aside {
             }
         }
     }
-
 }
 </style>
