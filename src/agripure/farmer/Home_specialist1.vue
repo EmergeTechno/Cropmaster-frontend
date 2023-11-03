@@ -6,11 +6,12 @@
         <div class="search-container">
           <div class="searchBar-container">
             <pv-autoComplete
-                v-model="value"
-                :suggestions="items"
-                @complete="search"
-                placeholder="Buscar"
-                class="searchBar"
+
+              v-model="value"
+              :suggestions="items"
+              @complete="search"
+              placeholder="Buscar"
+              class="searchBar"
             />
           </div>
           <i class="pi pi-search"></i>
@@ -20,15 +21,15 @@
         <h2 style="margin: 2rem 0 2rem 0">Contactos:</h2>
         <div class="cards">
           <router-link
-              v-for="contact in displayableContacts"
-              :key="contact.id"
-              :to="'/info/' + contact.id">
+                  v-for="contact in displayableContacts"
+                  :key="contact.id"
+                  :to="'/info/' + contact.id">
             <pv-card style="width: 17em; border-radius: 15px;">
               <template #header>
                 <img
-                    alt="user header"
-                    :src="contact.imageUrl"
-                    style="width: 100%; height: 150px; border-radius: 15px;"
+                  alt="user header"
+                  :src="contact.imageUrl"
+                  style="width: 100%; height: 150px; border-radius: 15px;"
                 />
               </template>
               <template #title>{{ contact.name }}</template>
@@ -62,26 +63,26 @@ export default {
       value: ref(""),
       items: ref([]),
       showDropdown: false,
-      displayableContacts:[]
+        displayableContacts:[]
     };
   },
-  created() {
-    new ContactServices().getContactsForFarmer(1).then(response=>{
-      this.getDisplayableContacts(response.data)
-    })
-  },
-  methods: {
+    created() {
+      new ContactServices().getContactsForFarmer(1).then(response=>{
+          this.getDisplayableContacts(response.data)
+      })
+    },
+    methods: {
     search(event) {
       console.log("hola");
       this.items = [...Array(10).keys()].map((item) => this.value + "-" + item);
     },
-    getDisplayableContacts(rawContacts){
-      for (let i = 0; i < rawContacts.length; i++) {
-        new UserServices().getUserById(rawContacts[i].specialistId).then(response=>{
-          this.displayableContacts.push(response.data)
-        })
-      }
-    }
+        getDisplayableContacts(rawContacts){
+            for (let i = 0; i < rawContacts.length; i++) {
+                new UserServices().getUserById(rawContacts[i].specialistId).then(response=>{
+                    this.displayableContacts.push(response.data)
+                })
+            }
+        }
   },
 };
 </script>
@@ -93,7 +94,7 @@ export default {
   margin-top: 20px;
   margin-left: 20px;
   margin-bottom: 20px;
-  width: 100%;
+    width: 100%;
 }
 
 .container {
@@ -129,11 +130,11 @@ export default {
 }
 
 .cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(17em, 1fr)); /* 3 columnas y tamaño mínimo de 17em */
-  gap: 2rem; /* Espacio entre las cartas */
-  justify-items: center; /* Centra las cartas horizontalmente */
-  margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17em, 1fr)); /* 3 columnas y tamaño mínimo de 17em */
+    gap: 2rem; /* Espacio entre las cartas */
+    justify-items: center; /* Centra las cartas horizontalmente */
+    margin-top: 2rem;
 }
 
 .button {

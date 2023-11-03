@@ -12,9 +12,9 @@
       </div>
       <div class="image-container">
         <img
-            :src="image"
-            alt="Specialist Image"
-            class="centered-image"
+          :src="image"
+          alt="Specialist Image"
+          class="centered-image"
         />
       </div>
       <div class="detail-row">
@@ -55,19 +55,19 @@ export default {
   },
   methods: {
     loadSpecialistDetails(id) {
-      new UserServices().getUserById(id).then(response=>{
-        this.specialistName=response.data.name
-        this.image=response.data.imageUrl
-        this.location =response.data.location
-        new SpecialistServices().getSpecialistInformationByUserId(id).then(response=>{
-          this.expertise=response.data[0].expertise
-          this.contactEmail = response.data[0].contactEmail
-          this.areasOfFocus= response.data[0].areasOfFocus
+        new UserServices().getUserById(id).then(response=>{
+            this.specialistName=response.data.name
+            this.image=response.data.imageUrl
+            this.location =response.data.location
+            new SpecialistServices().getSpecialistInformationByUserId(id).then(response=>{
+                this.expertise=response.data[0].expertise
+                this.contactEmail = response.data[0].contactEmail
+                this.areasOfFocus= response.data[0].areasOfFocus
+            })
         })
-      })
     },
     contactSpecialist() {
-      this.$router.push("/chat/" + this.id)
+        this.$router.push("/chat/" + this.id)
     },
   },
 };
@@ -81,7 +81,7 @@ export default {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   max-width: 600px;
   margin: 0 auto;
-  width: 100%;
+    width: 100%;
 }
 
 .agriculture-specialist-details {

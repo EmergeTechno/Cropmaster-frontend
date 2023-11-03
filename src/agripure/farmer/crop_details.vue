@@ -1,31 +1,31 @@
 <template>
   <div class="background">
     <div class="tomato-details">
-      <div class="title">
-        <h1 class="title-text">Tomato Details</h1>
-      </div>
-      <div class="detail">
-        <p class="detail-text">Scientific name: {{ scientificName }}</p>
-      </div>
-      <div class="detail">
-        <p class="detail-text">Variety: {{ variety }}</p>
-      </div>
-      <div class="image-container">
-        <img src="https://sembralia.com/cdn/shop/articles/tomate.jpg?v=1648560931" alt="Tomato Image" class="centered-image">
-      </div>
-      <div class="detail-row">
-        <p class="detail-text">Land type: {{ cropLandType }}</p>
-      </div>
-      <div class="divider"></div>
-      <div class="detail-row">
-        <p class="detail-text">Distance between plants: {{ distanceCrop }}</p>
-      </div>
-      <div class="divider"></div>
-      <div class="detail-row">
-        <p class="detail-text">Weather conditions: {{ cropWeather }}</p>
-      </div>
+        <div class="title">
+          <h1 class="title-text">Tomato Details</h1>
+        </div>
+        <div class="detail">
+          <p class="detail-text">Scientific name: {{ scientificName }}</p>
+        </div>
+        <div class="detail">
+          <p class="detail-text">Variety: {{ variety }}</p>
+        </div>
+        <div class="image-container">
+          <img src="https://sembralia.com/cdn/shop/articles/tomate.jpg?v=1648560931" alt="Tomato Image" class="centered-image">
+        </div>
+        <div class="detail-row">
+            <p class="detail-text">Land type: {{ cropLandType }}</p>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-row">
+          <p class="detail-text">Distance between plants: {{ distanceCrop }}</p>
+        </div>
+        <div class="divider"></div>
+        <div class="detail-row">
+          <p class="detail-text">Weather conditions: {{ cropWeather }}</p>
+        </div>
     </div>
-  </div>
+  </div>  
 </template>
 <script>
 export default {
@@ -42,13 +42,13 @@ export default {
 </script>
 <style scoped>
 .background {
-  background-color: #242424;
-  color: white; /* Cambiar el color del texto si es necesario */
-  margin: 15px 20px 15px 20px; /* Agregar el relleno deseado */
-  border-radius: 15px; /* Agregar bordes redondeados */
-  width: 100%;
+    background-color: #242424;
+    color: white; /* Cambiar el color del texto si es necesario */
+    margin: 15px 20px 15px 20px; /* Agregar el relleno deseado */
+    border-radius: 15px; /* Agregar bordes redondeados */
+    width: 100%;
 }
-.tomato-details {
+    .tomato-details {
 
   color: white;
   padding: 20px;
@@ -56,7 +56,6 @@ export default {
   flex-direction: column;
   align-items: flex-start; /* Alinea los elementos a la izquierda */
   text-align: left; /* Alinea el texto a la izquierda */
-
 }
 .title {
   margin-right: 20px; /* Espacio entre el título y el borde derecho */
@@ -90,7 +89,6 @@ export default {
   align-items: center;
   margin-top: 10px;
   margin-top: 15px;
-
 }
 
 .divider {
@@ -99,5 +97,5 @@ export default {
   background-color: rgba(255, 255, 255, 0.5); /* Color de línea divisoria */
   margin: 10px 0;
   margin-top: 15px;
-}
+  }
 </style>
