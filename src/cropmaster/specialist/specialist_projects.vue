@@ -128,53 +128,53 @@
                         <div style="display:flex; justify-content: center">
                             <h2 style="margin: 0rem 2rem 2rem 0">INFORMATION</h2>
                         </div>
-                      <div style="display:flex; justify-content: center; width: 100%;">
+                        <div style="display:flex; justify-content: center; width: 100%;">
                         <span style="margin: 1.5rem 2rem 0rem 2rem;width: 100%;display:flex; justify-content: center;" class="p-float-label">
                           <pv-input @input="validateNextButtonDisable" v-model="projectName" style="width: 100%"/>
                           <label style="width: 100%">Project name</label>
                         </span>
-                      </div>
-                      <div style="display:flex; justify-content: center; width: 100%;">
+                        </div>
+                        <div style="display:flex; justify-content: center; width: 100%;">
                         <span style="margin: 1.8rem 2rem 2rem 2rem;width: 100%;display:flex; justify-content: center;" class="p-float-label">
                           <pv-textArea style="width: 100%" @input="validateNextButtonDisable" rows="3" cols="15" v-model="projectDescription"/>
                           <label style="width: 100%">Project description</label>
                         </span>
-                      </div>
+                        </div>
 
 
 
                     </div>
                     <div v-if="dateStep">
                         <h2 style="margin: 0 2rem 1rem 0">Project duration</h2>
-                      <div style="display: flex; justify-content: center; width: 100%;">
-                        <div style="width: 90%;">
-                          <p style="margin: 1rem 0 0.5rem 0">Start date</p>
-                          <pv-calendar @dateSelect="validateNextButtonDisable" v-model="startProjectDate" date-format="dd/mm/yy" style="width: 100%" showIcon :minDate="startProjectMinDate" :manualInput="false" />
-                        </div>
-                      </div>
                         <div style="display: flex; justify-content: center; width: 100%;">
-                          <div style="width: 90%;">
-                            <p style="margin: 1.5rem 0 0.5rem 0">Finish date</p>
-                            <pv-calendar @dateSelect="validateNextButtonDisable" v-model="finishProjectDate" date-format="dd/mm/yy" style=" width: 100%;margin-bottom: 1rem" showIcon :minDate="startProjectDate" :manualInput="false" />
-                          </div>
+                            <div style="width: 90%;">
+                                <p style="margin: 1rem 0 0.5rem 0">Start date</p>
+                                <pv-calendar @dateSelect="validateNextButtonDisable" v-model="startProjectDate" date-format="dd/mm/yy" style="width: 100%" showIcon :minDate="startProjectMinDate" :manualInput="false" />
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: center; width: 100%;">
+                            <div style="width: 90%;">
+                                <p style="margin: 1.5rem 0 0.5rem 0">Finish date</p>
+                                <pv-calendar @dateSelect="validateNextButtonDisable" v-model="finishProjectDate" date-format="dd/mm/yy" style=" width: 100%;margin-bottom: 1rem" showIcon :minDate="startProjectDate" :manualInput="false" />
+                            </div>
                         </div>
                     </div>
                     <div v-if="taskStep">
                         <h2 style="margin: 0 2rem 2rem 0">Add tasks</h2>
                         <div style="display: flex;justify-content: space-around">
                             <div style="width: 35%">
-                              <div style="display:flex; justify-content: center; width: 100%;">
+                                <div style="display:flex; justify-content: center; width: 100%;">
                                 <span style="margin: 0 1rem 0 0;width: 100%;display:flex; justify-content: center;" class="p-float-label">
                                   <pv-input @input="validateAddTaskButtonDisable" style="width: 100%" v-model="taskName" />
                                   <label style="width: 100%">Task name</label>
                                </span>
-                              </div>
-                              <div style="display:flex; justify-content: center; width: 100%;">
+                                </div>
+                                <div style="display:flex; justify-content: center; width: 100%;">
                                 <span style="margin: 1.5rem 1rem 0 0;width: 100%;display:flex; justify-content: center;" class="p-float-label">
                                   <pv-textArea @input="validateAddTaskButtonDisable" style="width: 100%" rows="2" cols="15" v-model="taskDescription" />
                                   <label style="width: 100%">Task description</label>
                                 </span>
-                              </div>
+                                </div>
                                 <div style="display: flex;justify-content: center; width: 93%">
                                     <pv-button :disabled="isAddTaskButtonDisable" style="margin-top: 1rem; width: 100%"  label="Add" severity="success" @click="addTask()"/>
                                 </div>
@@ -359,18 +359,18 @@ export default {
             newProject.projectStarted=this.isProjectStarted()
             new ProjectService().createProject(newProject).then(res=>{
                 new ProjectService().getProjectsBySpecialistId(newProject.specialistId).then(response=>{
-                  for (let i = 0; i < response.data.length; i++){
-                      if(newProject.name===response.data[i].name){
-                          newProject.id=response.data[i].id
-                          this.projects.push(newProject)
-                          //add task as activities
-                          this.createStorableTaskForProject()
-                          this.createProjectVisible=false
-                          this.taskStep=false
-                          this.selectionStep=true
-                          this.cleanProjectData()
-                      }
-                  }
+                    for (let i = 0; i < response.data.length; i++){
+                        if(newProject.name===response.data[i].name){
+                            newProject.id=response.data[i].id
+                            this.projects.push(newProject)
+                            //add task as activities
+                            this.createStorableTaskForProject()
+                            this.createProjectVisible=false
+                            this.taskStep=false
+                            this.selectionStep=true
+                            this.cleanProjectData()
+                        }
+                    }
                 })
 
             })
@@ -512,14 +512,14 @@ export default {
             this.isCreateProjectButtonDisable=false
         },
         isTaskUnique(task) {
-          // Verifica si existe algún elemento en el arreglo con el mismo name y date
+            // Verifica si existe algún elemento en el arreglo con el mismo name y date
             return !this.taskForProject.some(existingTask => {
-              return (
-                existingTask.name === task.name &&
-                existingTask.date.getTime() === task.date.getTime()
-              );
+                return (
+                    existingTask.name === task.name &&
+                    existingTask.date.getTime() === task.date.getTime()
+                );
             });
-          },
+        },
         deleteTask(id) {
             if(this.taskForProject.length===1){
                 this.isCreateProjectButtonDisable=true
@@ -530,21 +530,34 @@ export default {
         getCropForProject(){
             this.currentCropsForFarmer=[]
             this.isNextButtonDisable=false
+
             new CropServices().getCropsByFarmerId(this.token,this.selectedContact.accountId).then(response=>{
                 let cropsForFarmer=response.data
                 for (let i = 0; i < cropsForFarmer.length; i++) {
                     new ProjectService().getProjectByFarmerId(this.selectedContact.accountId).then(res=>{
                         let projects=res.data
-                        for (let j = 0; j < projects.length; j++) {
-                            if(projects[j].cropId!==cropsForFarmer[i].id){
-                                let storableCropAndPlantInfo={}
-                                new PlantServices().getPlantInfoById(cropsForFarmer[i].plantId).then(res=>{
-                                    storableCropAndPlantInfo=res.data
-                                    storableCropAndPlantInfo.cropId=cropsForFarmer[i].id
-                                    this.currentCropsForFarmer.push(storableCropAndPlantInfo)
-                                })
+                        if(projects.length>0){
+                            for (let j = 0; j < projects.length; j++) {
+                                if(projects[j].cropId!==cropsForFarmer[i].id){
+                                    let storableCropAndPlantInfo={}
+                                    new PlantServices().getPlantInfoById(cropsForFarmer[i].plantId).then(res=>{
+                                        storableCropAndPlantInfo=res.data
+                                        storableCropAndPlantInfo.cropId=cropsForFarmer[i].id
+                                        this.currentCropsForFarmer.push(storableCropAndPlantInfo)
+                                        console.log(this.currentCropsForFarmer)
+                                    })
+                                }
                             }
+                        }else {
+                            let storableCropAndPlantInfo={}
+                            new PlantServices().getPlantInfoById(cropsForFarmer[i].plantId).then(res=>{
+                                storableCropAndPlantInfo=res.data
+                                storableCropAndPlantInfo.cropId=cropsForFarmer[i].id
+                                this.currentCropsForFarmer.push(storableCropAndPlantInfo)
+                                console.log(this.currentCropsForFarmer)
+                            })
                         }
+
                     })
 
                 }
