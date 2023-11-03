@@ -5,7 +5,7 @@ const http = axios.create({
 })
 export class NotificationService{
     getAllNotificationByUserId(userId){
-        return http.get("?userId="+userId);
+        return http.get("?toUserId="+userId);
     }
 
 }
