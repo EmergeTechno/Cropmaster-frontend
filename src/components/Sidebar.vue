@@ -2,7 +2,7 @@
     <aside v-if="shouldShowSidebar">
         <div class="logo">
             <img src="../assets/logo.png" alt="Vue"/>
-            <h3 style="color: white;">Cropmaster</h3>
+            <h3 style="color: white;">CropMaster</h3>
         </div>
         <div class="menu">
             <router-link v-if="usertype==='farmer'" to="/farmer/cropInventory" class="button" style="margin-bottom: 1rem">
@@ -52,9 +52,8 @@
                     <pv-avatar
                         :image="imageUrl"
                         class="footer-img" shape="circle" />
-                    <div class="footer-text">
+                    <div class="footer-text" style="display: flex;align-items: center">
                         <p class="text" style="color: white;font-weight: bold">{{ userName }}</p>
-                        <p class="text" style="color: #939393;">{{ userEmail }}</p>
                     </div>
                 </div>
             </router-link>
@@ -63,9 +62,8 @@
                     <pv-avatar
                             :image="imageUrl"
                             class="footer-img" shape="circle" />
-                    <div class="footer-text">
+                    <div class="footer-text" style="display: flex;align-items: center">
                         <p class="text" style="color: white;font-weight: bold">{{ userName }}</p>
-                        <p class="text" style="color: #939393;">{{ userEmail }}</p>
                     </div>
                 </div>
             </router-link>
