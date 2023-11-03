@@ -34,13 +34,32 @@ const router = createRouter({
             component: () => import('../agripure/farmer/Home_specialist1.vue')
         },
         {
-            path: '/info/:id',
-            name: 'info',
-            component: () => import('../agripure/farmer/Home_specialist2.vue'),
-            props: true,
+            path: '/farmer/specialist',
+            name: 'specialist',
+            component: () => import('../agripure/farmer/farmer_specialist.vue')
         },
         {
-            path: '/chat/:id',
+            path: '/farmer/devices',
+            name: 'devices',
+            component: () => import('../agripure/farmer/farmer_devices.vue')
+        },
+        {
+            path: '/farmer/notifications',
+            name: 'notifications',
+            component: () => import('../agripure/farmer/farmer_notifications.vue')
+        },
+        {
+            path: '/farmer/projects',
+            name: 'project',
+            component: () => import('../agripure/farmer/farmer_projects.vue')
+        },
+        {
+            path: '/farmer/profile',
+            name: 'profile',
+            component: () => import('../agripure/farmer/farmer_profile.vue')
+        },
+        {
+
             name: 'chat',
             component: () => import('../agripure/farmer/farmer_chatMessages.vue'),
             props: true,

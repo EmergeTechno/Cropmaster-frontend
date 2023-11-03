@@ -56,7 +56,6 @@ export default {
   flex-direction: column;
   align-items: flex-start; /* Alinea los elementos a la izquierda */
   text-align: left; /* Alinea el texto a la izquierda */
-  
 }
 .title {
   margin-right: 20px; /* Espacio entre el título y el borde derecho */
@@ -90,7 +89,7 @@ export default {
   align-items: center;
   margin-top: 10px;
   margin-top: 15px;
-  
+
 }
 
 .divider {
