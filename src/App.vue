@@ -1,5 +1,5 @@
 <script setup>
-import Sidebar from './components/Sidebar.vue'
+import Sidebar from './cropmaster/components/sidebar.component.vue'
 </script>
 
 <template>
@@ -7,7 +7,6 @@ import Sidebar from './components/Sidebar.vue'
         <pv-toast></pv-toast>
         <!-- Sidebar -->
         <Sidebar />
-
         <!-- Content -->
         <RouterView />
     </div>
