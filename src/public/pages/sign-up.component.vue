@@ -341,13 +341,13 @@ export default {
     },
     data(){
         return{
-            publishableKey:'pk_test_51OAzYZHe6cIQ9MTkeu2FPZCcR1olGo1LeCLLkUNdmVvEXBGmIv2Tw3jFWWhqzCDZ6agSJYrMsQhBwCOdEeeMs3zf007fpn6u8x',
+            publishableKey:'pk_test_51OFmuIFqs67qbP38mInABlV3XbrjeGQKVzcE0oeScImm8D0QCzfECerZdqXqVPPtzyMs9la5xZGtW0lzKHQ5ZBim00rjUnzmA5',
             successURL:'https://cropmaster.netlify.app/successful-pay',
             cancelURL:'https://cropmaster.netlify.app/unsuccessful-pay',
             loading: false,
             lineItems: [
                 {
-                    price: 'price_1OB0vHHe6cIQ9MTkbD9RYUzw',
+                    price: 'price_1OFn1CFqs67qbP38vDn4aCHR',
                     quantity: 1,
                 },
             ],

@@ -142,6 +142,7 @@
                   <pv-input v-model="currentDeviceForInfoName" style="width: 100%;color: white" placeholder="Disabled" />
               </div>
               <h4 style="margin: 1rem ">Model: {{currentDeviceForInfo.model}}</h4>
+            <p style="margin: 1rem ">ID: {{currentDeviceForInfo.id}}</p>
               <div style="width: 100%;display: flex;justify-content: space-around ">
                   <div style="display: flex; align-items: center;margin-left: 1rem">
                       <pv-inputSwitch v-model="currentDeviceForInfo.activeNotification" />
@@ -272,13 +273,13 @@ export default {
         active: { value: null, matchMode: FilterMatchMode.IN },
         verified: { value: null, matchMode: FilterMatchMode.EQUALS }
       },
-        publishableKey:'pk_test_51OAzYZHe6cIQ9MTkeu2FPZCcR1olGo1LeCLLkUNdmVvEXBGmIv2Tw3jFWWhqzCDZ6agSJYrMsQhBwCOdEeeMs3zf007fpn6u8x',
+        publishableKey:'pk_test_51OFmuIFqs67qbP38mInABlV3XbrjeGQKVzcE0oeScImm8D0QCzfECerZdqXqVPPtzyMs9la5xZGtW0lzKHQ5ZBim00rjUnzmA5',
         successURL:'https://cropmaster.netlify.app/farmer/devices',
         cancelURL:'https://cropmaster.netlify.app/unsuccessful-pay',
         loading: false,
         lineItems: [
             {
-                price: 'price_1OB0vHHe6cIQ9MTkbD9RYUzw',
+                price: 'price_1OFnAhFqs67qbP38W3V2264x',
                 quantity: 1,
             },
         ],
@@ -376,7 +377,7 @@ export default {
       },
       processPurchase(){
           if(this.currentDeviceInBuy.model==='DHT22'){
-              this.lineItems[0].price='price_1OCmbGHe6cIQ9MTkGUrgef5y'
+              this.lineItems[0].price='price_1OFnAhFqs67qbP38W3V2264x'
               new DeviceServices().postDevice(this.currentDeviceInBuy).then(res=>{
                   localStorage.setItem("deviceId",res.data)
                   localStorage.setItem("deviceModel",this.currentDeviceInBuy.model)
@@ -384,7 +385,7 @@ export default {
               })
           }
           if(this.currentDeviceInBuy.model==='DS18B20'){
-              this.lineItems[0].price='price_1OCmcSHe6cIQ9MTkNAakzDBP'
+              this.lineItems[0].price='price_1OFn8zFqs67qbP38xpQ9yu07'
               new DeviceServices().postDevice(this.currentDeviceInBuy).then(res=>{
                   localStorage.setItem("deviceId",res.data)
                   localStorage.setItem("deviceModel",this.currentDeviceInBuy.model)

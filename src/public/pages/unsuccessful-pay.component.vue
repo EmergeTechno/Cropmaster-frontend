@@ -98,13 +98,13 @@ export default {
             isDeviceBought:false,
             deviceId:null,
             accountId:null,
-            publishableKey:'pk_test_51OAzYZHe6cIQ9MTkeu2FPZCcR1olGo1LeCLLkUNdmVvEXBGmIv2Tw3jFWWhqzCDZ6agSJYrMsQhBwCOdEeeMs3zf007fpn6u8x',
+            publishableKey:'pk_test_51OFmuIFqs67qbP38mInABlV3XbrjeGQKVzcE0oeScImm8D0QCzfECerZdqXqVPPtzyMs9la5xZGtW0lzKHQ5ZBim00rjUnzmA5',
             successURL:'http://localhost:5173/successful-pay',
             cancelURL:'http://localhost:5173/unsuccessful-pay',
             loading: false,
             lineItems: [
                 {
-                    price: 'price_1OB0vHHe6cIQ9MTkbD9RYUzw',
+                    price: 'price_1OFn1CFqs67qbP38vDn4aCHR',
                     quantity: 1,
                 },
             ],
@@ -130,10 +130,10 @@ export default {
             if(this.isDeviceBought){
                 this.successURL='http://localhost:5173/farmer/devices'
                 if(this.DeviceModel==='DHT22'){
-                    this.lineItems[0].price='price_1OCmbGHe6cIQ9MTkGUrgef5y'
+                    this.lineItems[0].price='price_1OFnAhFqs67qbP38W3V2264x'
                 }
                 if(this.DeviceModel==='DS18B20'){
-                    this.lineItems[0].price='price_1OCmcSHe6cIQ9MTkNAakzDBP'
+                    this.lineItems[0].price='price_1OFn8zFqs67qbP38xpQ9yu07'
                 }
                 localStorage.setItem("deviceId",this.deviceId)
                 localStorage.setItem("deviceModel",this.DeviceModel)
